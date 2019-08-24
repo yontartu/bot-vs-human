@@ -1,8 +1,11 @@
 # General
 .DS_Store
-# data folder
 
+# my files
 data/
+todo.md
+conf/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
