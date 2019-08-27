@@ -102,5 +102,48 @@ def create_combined_right_troll_dataframe(new_filepath):
     right_trolls_all.to_csv(new_filepath, index=False)
     print('  Saved', new_filepath, 'with shape', right_trolls_all.shape)
 
+def trim_right_trolls_csv(orig_filepath, new_filepath):
+    """
+    Creates a subset of a `right_trolls` CSV, reducing the number
+    of features and rows.
+    
+    Parameters
+    ----------
+        orig_filepath : path to `right_trolls` CSV
+        new_filepath : the name and path to save the trimmed dataframe
+    
+    Returns
+    -------
+        None. Prints a progress report and the filepath to the new file.
+    """
+    df = pd.read_csv(orig_filepath)
+    start_shape = df.shape
+    print('Original shape', start_shape)
+    
+    # convert date to datetime
+    df['publish_date'] = pd.to_datetime(df.publish_date)
+    
+    # filter out retweets
+    df = df[df.retweet == 0]
+    print('Filtered out', start_shape[0] - df.shape[0], 'rows (retweets)')
+    intermed_shape = df.shape
+    
+    # Filter to English tweets
+    df = df[df.language == 'English']
+    print('Filtered out', intermed_shape[0] - df.shape[0], 'rows (non-English)')
+    
+    # Filter down to features of interest
+    features_to_keep = [
+        'author', 'content', 'region', 'publish_date', 'following', 
+        'followers', 'updates'
+    ]
 
-# functions to 
+    df = df[features_to_keep]
+    df.to_csv(new_filepath, index=False)
+    print('  Saved', new_filepath, 'with shape', df.shape)
+
+
+
+
+
+
