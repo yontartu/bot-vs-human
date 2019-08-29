@@ -1,13 +1,18 @@
-# import requests
-# from bs4 import BeautifulSoup
-import pandas as pd
-import numpy as np
-import os
-import re
-import json
+from collections import Counter
 from datetime import datetime
+import json
+import jsonpickle
+import os
 import pickle
+import re
+import sys
 import time
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
 # functions to work with pickle files 
 
@@ -100,6 +105,7 @@ def create_combined_right_troll_csv(new_filepath):
         right_trolls_all = pd.concat([right_trolls_all, new_df], axis=0, sort=False)
         del(new_df)
 
+    right_trolls_all['target'] = 1
     right_trolls_all.to_csv(new_filepath, index=False)
     print('  Saved', new_filepath, 'with shape', right_trolls_all.shape)
 
@@ -134,10 +140,7 @@ def trim_right_trolls_csv(orig_filepath, new_filepath):
     print('Filtered out', intermed_shape[0] - df.shape[0], 'rows (non-English)')
     
     # filter down to features of interest
-    features_to_keep = [
-        'author', 'content', 'region', 'publish_date', 'following', 
-        'followers', 'updates'
-    ]
+    features_to_keep = ['author', 'content', 'publish_date', 'target']
     df = df[features_to_keep]
     intermed_shape = df.shape
 
@@ -175,10 +178,26 @@ def create_verified_tweets_csv(new_filepath):
         path = '../../data/01_raw/verified_tweets/' + filename
         new_df = pd.read_csv(path)
         verified_tweets = pd.concat([verified_tweets, new_df], axis=0, sort=False)
+    start_shape = verified_tweets.shape
+    print('Original shape (after processing all files):', start_shape)
 
+    # drop rows with duplicated tweet content
     verified_tweets.drop_duplicates(subset='tweet', inplace=True)
-    features_to_keep = ['username', 'date', 'time', 'tweet']
+    print('Filtered out', start_shape[0] - verified_tweets.shape[0], 'rows (duplicate tweets)')
+
+    # add target column
+    verified_tweets['target'] = 0
+    
+    # add datetime column
+    verified_tweets['publish_date'] = pd.to_datetime(verified_tweets['date'] + ' ' + verified_tweets['time'])
+
+    # filter down to columns of interest
+    features_to_keep = ['username', 'tweet', 'publish_date', 'target']
     verified_tweets = verified_tweets[features_to_keep]
+    
+    # rename columns (to match russian troll tweets)
+    verified_tweets.columns = ['author', 'content', 'publish_date', 'target']
+
     verified_tweets.to_csv(new_filepath, index=False)
     print('  Saved', new_filepath, 'with shape', verified_tweets.shape)
 
