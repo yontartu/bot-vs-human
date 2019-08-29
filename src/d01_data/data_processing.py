@@ -122,24 +122,29 @@ def trim_right_trolls_csv(orig_filepath, new_filepath):
     print('Original shape', start_shape)
     
     # convert date to datetime
-    df['publish_date'] = pd.to_datetime(df.publish_date)
+    # df['publish_date'] = pd.to_datetime(df.publish_date)
     
     # filter out retweets
     df = df[df.retweet == 0]
     print('Filtered out', start_shape[0] - df.shape[0], 'rows (retweets)')
     intermed_shape = df.shape
     
-    # Filter to English tweets
+    # filter to English tweets
     df = df[df.language == 'English']
     print('Filtered out', intermed_shape[0] - df.shape[0], 'rows (non-English)')
     
-    # Filter down to features of interest
+    # filter down to features of interest
     features_to_keep = [
         'author', 'content', 'region', 'publish_date', 'following', 
         'followers', 'updates'
     ]
-
     df = df[features_to_keep]
+    intermed_shape = df.shape
+
+    # drop duplicate tweets
+    df.drop_duplicates(subset='content', inplace=True)
+    print('Filtered out', intermed_shape[0] - df.shape[0], 'rows (duplicate tweets)')
+    
     df.to_csv(new_filepath, index=False, date_format='%Y-%m-%d %H:%M:%S')
     print('  Saved', new_filepath, 'with shape', df.shape)
 
