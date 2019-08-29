@@ -203,3 +203,40 @@ def create_verified_tweets_csv(new_filepath):
 
 
 
+# function to combine right troll tweets with verified tweets (downsampling troll tweets)
+
+def create_tweets_all_csv(path_to_right_trolls, path_to_verified_tweets, new_filepath, random_state):
+    """
+    Create a merged CSV combining Right Troll tweets as well as tweets from verified users.
+    First downsample from Right Troll tweets, so that its shape matches that of verified tweets.
+    The two CSVs must have been preprocessed so that their columns align.
+
+    Parameters
+    ----------
+        path_to_right_trolls : a CSV containing right troll tweets, and four columns for 
+            "author", "content", "publish_date" and "target"
+        path_to_verified_tweets : a CSV containing tweets from verified users, and four columns for 
+            "author", "content", "publish_date" and "target"
+        new_filepath : the name and path to save the new combined CSV
+        random_state : random seed to generate sample of right troll tweets
+                    
+    Returns
+    -------
+        None. Prints a progress report after processing each file.    
+
+    """
+    right_trolls = pd.read_csv(path_to_right_trolls, parse_dates=[2])
+    print('Shape of right_trolls:', right_trolls.shape)
+    verified_tweets = pd.read_csv(path_to_verified_tweets, parse_dates=[2])
+    print('Shape of verified_tweets:', verified_tweets.shape)
+
+    # downsample from right trolls (shape should match verified_tweets)
+    right_trolls_sample = right_trolls.sample(n=verified_tweets.shape[0], random_state=random_state)
+    print('Shape of right_trolls_sample:', right_trolls_sample.shape)
+
+    # merge dataframes
+    tweets_all = pd.concat([right_trolls_sample, verified_tweets], axis=0, sort=False)
+    tweets_all = tweets_all.reset_index(drop=True)
+    tweets_all.to_csv(new_filepath, index=False)
+    print('  Saved', new_filepath, 'with shape', tweets_all.shape)
+
