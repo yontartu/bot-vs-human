@@ -29,7 +29,8 @@ def load_pickle(name):
 		return pickle.load(f)
 
 
-# functions to merge/clean/process raw data 
+
+# functions to merge/clean/process russian troll data
 
 def filter_dataframe_to_right_trolls(filepath, new_filepath, chunksize):
     """
@@ -78,14 +79,14 @@ def process_files_into_right_trolls(num_of_files, chunksize):
         new_filepath = f'../../data/02_intermediate/right_trolls_{i}.csv'
         filter_dataframe_to_right_trolls(filepath, new_filepath, chunksize=chunksize)
 
-def create_combined_right_troll_dataframe(new_filepath):
+def create_combined_right_troll_csv(new_filepath):
     """
     Create a CSV file containing all tweets from accounts labeled as "Right
     Trolls" by academic researchers. 
     
     Parameters
     ----------
-        new_filepath : the name and path to save the new combined dataframe
+        new_filepath : the name and path to save the new combined CSV
         
     Returns
     -------
@@ -144,6 +145,37 @@ def trim_right_trolls_csv(orig_filepath, new_filepath):
 
 
 
+# functions to merge/clean/process verified tweets data
+
+def create_verified_tweets_csv(new_filepath):
+    """
+    Create a CSV file containing all verified tweets collected using the Twint package.
+    Combines datafiles from individual Twint queries (both hashtag-specific and not).
+    
+    Parameters
+    ----------
+        new_filepath : the name and path to save the new combined CSV
+        
+    Returns
+    -------
+        None. Prints a progress report after processing each file.    
+    """
+    verified_tweets = pd.read_csv('../../data/01_raw/verified_tweets/twint_query_NOHASHTAG.csv')
+    print('Shape after loading tweets not pulled using hashtags', verified_tweets.shape)
+    twint_files_hashtag = os.listdir('../../data/01_raw/verified_tweets/')
+    twint_files_hashtag.remove('old_files')
+    twint_files_hashtag.remove('twint_query_NOHASHTAG.csv')
+    for filename in twint_files_hashtag:
+        print('Processing', filename)
+        path = '../../data/01_raw/verified_tweets/' + filename
+        new_df = pd.read_csv(path)
+        verified_tweets = pd.concat([verified_tweets, new_df], axis=0, sort=False)
+
+    verified_tweets.drop_duplicates(subset='tweet', inplace=True)
+    features_to_keep = ['username', 'date', 'time', 'tweet']
+    verified_tweets = verified_tweets[features_to_keep]
+    verified_tweets.to_csv(new_filepath, index=False)
+    print('  Saved', new_filepath, 'with shape', verified_tweets.shape)
 
 
 
