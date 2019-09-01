@@ -132,6 +132,7 @@ def trim_right_trolls_csv(orig_filepath, new_filepath):
     
     # filter out retweets
     df = df[df.retweet == 0]
+    df = df[df.content.str.startswith('RT ') == False]
     print('Filtered out', start_shape[0] - df.shape[0], 'rows (retweets)')
     intermed_shape = df.shape
     
