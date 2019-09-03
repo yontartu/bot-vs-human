@@ -266,10 +266,10 @@ def lemmatize_tokens(tweet_tokens):
             lem_result.append(tags[i][0])
     return lem_result
 
-def add_numeric_and_regex_features(df):
+def add_clean_text_numeric_and_regex_features(df):
     """
     Appends numeric features and features created using regular expressions
-    to a dataframe of tweet text. 
+    to a dataframe of tweet text, as well as cleaned-up tweet text. 
     
     Parameters
     ----------
