@@ -336,5 +336,9 @@ def add_clean_text_numeric_and_regex_features(df):
     
     # join tokens back into a string
     df['content_tokenized_lemma_joined'] = df.content_tokenized_lemma.apply(lambda x: " ".join(x))
-    
+    df.content_tokenized_lemma_joined = df.content_tokenized_lemma_joined.fillna(value='')
+
+    df['emojis_joined'] = df.emojis.apply(lambda x: " ".join(x))
+    df['hashtags_joined'] = df.hashtags.apply(lambda x: " ".join(x))
+
     print('New shape:', df.shape)
