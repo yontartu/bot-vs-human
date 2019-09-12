@@ -27,7 +27,7 @@ I perform extensive preprocessing of the raw text from tweets (including tokeniz
 
 #### 3. Build models and tune hyperparameters
 
-I test out several different classifiers, and settle on random forest as the best estimator. Here's a summary comparing the performance of various baseline models I tested:
+I test out several different classifiers, and settle on random forest as the best estimator. The model evaluation metric I'm trying to optimize for is recall (which will minimize false negatives). Here's a summary comparing the performance of various baseline models I tested:
 
 ![alt text](https://github.com/yontartu/bot-vs-human/blob/master/results/img/04_model_comparison.png)
 
@@ -39,6 +39,6 @@ After hyperparameter tuning through grid search, my random forest classifier ach
 
 You can explore tweet predictions using [this tool](https://joeygoodman.us/projects/1-russian-trolls).
 
-You can try making predictions on new tweets using [this web app](https://russian-troll-detector.herokuapp.com/). (The source code for this web app is available [here](https://github.com/yontartu/russian-troll-detector-webapp))
+You can try making predictions on new tweets using [this web app](https://russian-troll-detector.herokuapp.com/). (The source code for this web app is available [here](https://github.com/yontartu/russian-troll-detector-webapp).)
 
 A slide deck summarizing my project can be found [here](https://github.com/yontartu/bot-vs-human/blob/master/results/JoeyGoodman_FinalPresentation.pdf).
