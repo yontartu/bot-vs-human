@@ -93,7 +93,9 @@ def generate_unbalanced_X_and_y(df, pos_class_size, random_state):
     
     return X, y
 
-def generate_word_vector_for_X(X_train, X_test, X_valid, tweet_colname, max_features):
+
+
+def generate_word_vector_for_X(X_train, X_test, X_valid, tweet_colname, max_features, stop_words):
     """
     Generate vectors of words from the text content of tweets, from three separate input 
     vectors for X (X_train, X_test and X_valid).
@@ -112,11 +114,11 @@ def generate_word_vector_for_X(X_train, X_test, X_valid, tweet_colname, max_feat
         X_train_content_feat, X_test_content_feat, X_valid_content_feat
 
     """
-    vectorizer = CountVectorizer(analyzer = "word",
+    vectorizer = TfidfVectorizer(analyzer = "word",
                                  tokenizer = None,
                                  preprocessor = None,
-                                 stop_words = 'english',
                                  max_features = max_features,
+                                 stop_words = stop_words,
                                  ngram_range = (1, 3))
     X_train_content = X_train[tweet_colname].tolist()
     X_test_content = X_test[tweet_colname].tolist()
@@ -124,13 +126,17 @@ def generate_word_vector_for_X(X_train, X_test, X_valid, tweet_colname, max_feat
     
     X_train_content_feat = vectorizer.fit_transform(X_train_content).toarray()
     X_train_content_feat = pd.DataFrame(X_train_content_feat, columns=vectorizer.get_feature_names())
+    X_train_content_feat.index = X_train.index
 
     X_test_content_feat = vectorizer.transform(X_test_content).toarray()
     X_test_content_feat = pd.DataFrame(X_test_content_feat, columns=vectorizer.get_feature_names())
+    X_test_content_feat.index = X_test.index
     
     X_valid_content_feat = vectorizer.transform(X_valid_content).toarray()
     X_valid_content_feat = pd.DataFrame(X_valid_content_feat, columns=vectorizer.get_feature_names())
-
+    X_valid_content_feat.index = X_valid.index  
+    
+    print('Word vector')
     print('Train:', X_train_content_feat.shape)
     print('Test:', X_test_content_feat.shape)
     print('Valid:', X_valid_content_feat.shape)
@@ -156,7 +162,7 @@ def generate_emoji_vector_for_X(X_train, X_test, X_valid, emoji_colname, max_fea
         X_train_emoji_feat, X_test_emoji_feat, X_valid_emoji_feat
 
     """
-    vectorizer = CountVectorizer(analyzer = "word",
+    vectorizer = TfidfVectorizer(analyzer = "word",
                                  tokenizer = None,
                                  preprocessor = None,
     #                              stop_words = 'english',
@@ -169,13 +175,17 @@ def generate_emoji_vector_for_X(X_train, X_test, X_valid, emoji_colname, max_fea
     
     X_train_emoji_feat = vectorizer.fit_transform(X_train_emoji).toarray()
     X_train_emoji_feat = pd.DataFrame(X_train_emoji_feat, columns=vectorizer.get_feature_names())
-
+    X_train_emoji_feat.index = X_train.index
+    
     X_test_emoji_feat = vectorizer.transform(X_test_emoji).toarray()
     X_test_emoji_feat = pd.DataFrame(X_test_emoji_feat, columns=vectorizer.get_feature_names())
+    X_test_emoji_feat.index = X_test.index
     
     X_valid_emoji_feat = vectorizer.transform(X_valid_emoji).toarray()
     X_valid_emoji_feat = pd.DataFrame(X_valid_emoji_feat, columns=vectorizer.get_feature_names())
-
+    X_valid_emoji_feat.index = X_valid.index
+    
+    print('Emoji vector')
     print('Train:', X_train_emoji_feat.shape)
     print('Test:', X_test_emoji_feat.shape)
     print('Valid:', X_valid_emoji_feat.shape)
@@ -201,7 +211,7 @@ def generate_hashtag_vector_for_X(X_train, X_test, X_valid, hashtag_colname, max
         X_train_hashtag_feat, X_test_hashtag_feat, X_valid_hashtag_feat
 
     """
-    vectorizer = CountVectorizer(analyzer = "word",
+    vectorizer = TfidfVectorizer(analyzer = "word",
                                  tokenizer = None,
                                  preprocessor = None,
     #                              stop_words = 'english',
@@ -214,13 +224,17 @@ def generate_hashtag_vector_for_X(X_train, X_test, X_valid, hashtag_colname, max
     
     X_train_hashtag_feat = vectorizer.fit_transform(X_train_hashtag).toarray()
     X_train_hashtag_feat = pd.DataFrame(X_train_hashtag_feat, columns=vectorizer.get_feature_names())
+    X_train_hashtag_feat.index = X_train.index
 
     X_test_hashtag_feat = vectorizer.transform(X_test_hashtag).toarray()
     X_test_hashtag_feat = pd.DataFrame(X_test_hashtag_feat, columns=vectorizer.get_feature_names())
+    X_test_hashtag_feat.index = X_test.index
     
     X_valid_hashtag_feat = vectorizer.transform(X_valid_hashtag).toarray()
     X_valid_hashtag_feat = pd.DataFrame(X_valid_hashtag_feat, columns=vectorizer.get_feature_names())
-
+    X_valid_hashtag_feat.index = X_valid.index
+    
+    print('Hashtag vector')
     print('Train:', X_train_hashtag_feat.shape)
     print('Test:', X_test_hashtag_feat.shape)
     print('Valid:', X_valid_hashtag_feat.shape)
@@ -250,10 +264,17 @@ def generate_numeric_vector_for_X(X_train, X_test, X_valid, numeric_features):
     scaler = StandardScaler()
     X_train_numeric_feat = pd.DataFrame(scaler.fit_transform(X_train_numeric), 
                                         columns=X_train_numeric.columns)
+    X_train_numeric_feat.index = X_train.index
+    
     X_test_numeric_feat = pd.DataFrame(scaler.transform(X_test_numeric), 
                                         columns=X_test_numeric.columns)
+    X_test_numeric_feat.index = X_test.index
+    
     X_valid_numeric_feat = pd.DataFrame(scaler.transform(X_valid_numeric), 
                                         columns=X_valid_numeric.columns)
+    X_valid_numeric_feat.index = X_valid.index
+    
+    print('Numeric vector')
     print('Train:', X_train_numeric_feat.shape)
     print('Test:', X_test_numeric_feat.shape)
     print('Valid:', X_valid_numeric_feat.shape)
@@ -276,7 +297,8 @@ def generate_combined_features_X(X_train, X_test, X_valid):
                 X_test, 
                 X_valid, 
                 tweet_colname='content_tokenized_lemma_joined',
-                max_features=300
+                max_features=300,
+                stop_words=['american', 'obamas', 'supporter', 'thanks']
     )
     
     # emoji
