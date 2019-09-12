@@ -1,66 +1,22 @@
-# Python Project Template
+# Classifying Tweets from Russian Troll Accounts
 
-This template is based on the [DSSG machine learning pipeline](https://github.com/dssg/hitchhikers-guide/tree/master/sources/curriculum/0_before_you_start/pipelines-and-project-workflow). 
+My project involves building a machine learning model to detect tweets that resemble those from Russian troll twitter accounts. 
 
-Other useful resources:
-- [Cookiecutter data science](https://drivendata.github.io/cookiecutter-data-science/#directory-structure)
-- [Misha's blog post](https://medium.com/swlh/how-to-structure-a-python-based-data-science-project-a-short-tutorial-for-beginners-7e00bff14f56)
+If you want to explore some of my tweet-level predictions, check out [this tool](https://joeygoodman.us/projects/1-russian-trolls). You can also use [this web app](https://russian-troll-detector.herokuapp.com/) to make predictions on new tweets.
 
+![alt text](https://github.com/yontartu/bot-vs-human/blob/master/results/img/explore_tweet_predictions.gif)
+
+![alt text](https://github.com/yontartu/bot-vs-human/blob/master/results/img/web_app_demo.gif)
+
+## Set-up Instructions
+
+#### 1. Collect data
+
+My project required a dataset of tweets, labeled by whether they were sent from a Russian troll account or not. The data on Russian troll tweets was combiled by Linvill and Warren of Clemson University, and open-sourced through [FiveThirtyEight](https://github.com/fivethirtyeight/russian-troll-tweets). In order to construct a control group, I employed the `twint` package to collect a sample of tweets from verified users, tweeting within the same time period as the Russian troll accounts. The command I used to collect this data was:
+
+```bash
+$ bash collect_verified_tweets.sh
 ```
-├── LICENSE
-├── README.md          <- The top-level README for developers using this project.
-├── conf
-│   ├── base           <- Space for shared configurations like parameters
-│   └── local          <- Space for local configurations, usually credentials
-│
-├── data
-│   ├── 01_raw         <- Imutable input data
-│   ├── 02_intermediate<- Cleaned version of raw
-│   ├── 03_processed   <- The data used for modelling
-│   ├── 04_models      <- trained models
-│   ├── 05_model_output<- model output
-│   └── 06_reporting   <- Reports and input to frontend
-│
-├── docs               <- Space for Sphinx documentation
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is date YYYYMMDD (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `20190601-jqp-initial-data-exploration`.
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── results            <- Intermediate analysis as HTML, PDF, LaTeX, etc.
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── .gitignore         <- Avoids uploading data, credentials, outputs, system files etc
-│
-└── src                <- Source code for use in this project.
-    ├── __init__.py    <- Makes src a Python module
-    │
-    ├── d00_utils      <- Functions used across the project
-    │   └── remove_accents.py
-    │
-    ├── d01_data       <- Scripts to reading and writing data etc
-    │   └── load_data.py
-    │
-    ├── d02_intermediate<- Scripts to transform data from raw to intermediate
-    │   └── create_int_payment_data.py
-    │
-    ├── d03_processing <- Scripts to turn intermediate data into modelling input
-    │   └── create_master_table.py
-    │
-    ├── d04_modelling  <- Scripts to train models and then use trained models to make
-    │   │                 predictions
-    │   └── train_model.py
-    │
-    ├── d05_model_evaluation<- Scripts that analyse model performance and model selection
-    │   └── calculate_performance_metrics.py
-    │    
-    ├── d06_reporting  <- Scripts to produce reporting tables
-    │   └── create_rpt_payment_summary.py
-    │
-    └── d07_visualisation<- Scripts to create frequently used plots
-        └── visualise_patient_journey.py
-```
+
+#### 2. Process 
+
