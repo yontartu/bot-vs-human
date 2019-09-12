@@ -341,4 +341,27 @@ def add_clean_text_numeric_and_regex_features(df):
     df['emojis_joined'] = df.emojis.apply(lambda x: " ".join(x))
     df['hashtags_joined'] = df.hashtags.apply(lambda x: " ".join(x))
 
+    # filter out columns i don't need
+    df = df[[
+     'author', 
+     'content', 
+     'publish_date',
+     'target',
+     'urls_count',
+     'mentions_count',
+     'hashtags_count',
+     'reserved_words_count',
+     'emojis_count',
+     'word_count',
+     'pct_upper',
+     'exclams_count',
+     'ques_marks_count',
+     'dollar_marks_count',
+     'pics_count',
+     'content_tokenized_lemma_joined',
+     'emojis_joined',
+     'hashtags_joined'
+    ]]
+    
     print('New shape:', df.shape)
+    return df
