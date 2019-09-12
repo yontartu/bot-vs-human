@@ -1,6 +1,6 @@
 # Classifying Tweets from Russian Troll Accounts
 
-My project involves building a machine learning model to detect tweets that resemble those from Russian troll twitter accounts. 
+My project involves building a machine learning model to detect tweets from Russian troll twitter accounts. 
 
 If you want to explore some of my tweet-level predictions, check out [this tool](https://joeygoodman.us/projects/1-russian-trolls). You can also use [this web app](https://russian-troll-detector.herokuapp.com/) to make predictions on new tweets.
 
@@ -8,7 +8,7 @@ If you want to explore some of my tweet-level predictions, check out [this tool]
 
 ![alt text](https://github.com/yontartu/bot-vs-human/blob/master/results/img/web_app_demo.gif)
 
-## Set-up Instructions
+## Research Process
 
 #### 1. Collect data
 
@@ -18,5 +18,25 @@ My project required a dataset of tweets, labeled by whether they were sent from 
 $ bash collect_verified_tweets.sh
 ```
 
-#### 2. Process 
+#### 2. Process text data and feature engineering
 
+I perform extensive preprocessing of the raw text from tweets (including tokenization, stop word removal, and lemmatization), as well as feature engineering. You can find these functions in `src`:
+
+- Data file processing: `src/d01_data/data_processing.py`
+- Text processing: `src/d02_features/text_preprocessing.py`
+
+#### 3. Build models and tune hyperparameters
+
+I test out several different classifiers, and settle on random forest as the best estimator. Here's a summary comparing the performance of various models I tested:
+
+![alt text](https://github.com/yontartu/bot-vs-human/blob/master/results/img/04_model_comparison.png)
+
+#### 4. Findings
+
+After hyperparameter tuning through grid search, my random forest classifier achieves a recall score of **93.3%**.
+
+You can explore tweet predictions using [this tool](https://joeygoodman.us/projects/1-russian-trolls).
+
+You can try making predictions on new tweets using [this web app](https://russian-troll-detector.herokuapp.com/).
+
+A slide deck summarizing my project can be found [here](https://github.com/yontartu/bot-vs-human/blob/master/results/JoeyGoodman_FinalPresentation.pdf).
