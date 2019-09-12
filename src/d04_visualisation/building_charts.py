@@ -244,3 +244,46 @@ def plot_bokeh_explore_predictions(path_to_data, new_filepath):
     bpl.show(p)
 
 
+def plot_model_comparison(path_to_data, new_filepath):
+    """
+    Create a plot comparing the performance between various classifiers.
+
+    Parameters
+    ----------
+        path_to_data : path to CSV containing evaluation metrics for various models
+        new_filepath : the name and path to save the chart
+    
+    Returns
+    -------
+        None. Shows the plot.    
+    """
+    plt.style.use('fivethirtyeight')
+    fig = plt.figure(figsize=(12,5))
+    ax = fig.add_subplot(111)
+    plt.gcf().subplots_adjust(top=0.85, bottom=0.2)
+
+    data = pd.read_csv(path_to_data)
+
+    bar_width = 0.3
+    r1 = model_comparison.index.values
+    r2 = [x + bar_width for x in r1]
+
+    ax.bar(r1, model_comparison.f1_score.values, color='salmon', label='F1 score',
+          width=bar_width)
+    ax.bar(r2, model_comparison.recall_score.values, color='turquoise', label='Recall score',
+          width=bar_width)
+
+    for p in ax.patches:
+        ax.annotate("%.2f" % p.get_height(), (p.get_x() + p.get_width() / 2., p.get_height()),
+                     ha='center', va='center', fontsize=12, color='black', xytext=(0, 16),
+                     textcoords='offset points')
+
+    ax.set_title('\n Comparing recall and F1 scores across estimators \n', size=20)
+    ax.set_ylim(-0.02, 1.1)
+    ax.grid(b=False, axis='x')
+    ax.set_xticks(range(0,5))
+    ax.set_xticklabels(model_comparison.estimator.values, rotation=25)
+    ax.legend(loc='upper right', bbox_to_anchor=(1, 1.1))
+    plt.savefig(new_filepath)
+    print('Saved', new_filepath)
+    plt.show()
