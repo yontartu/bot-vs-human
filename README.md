@@ -12,7 +12,7 @@ If you want to explore some of my tweet-level predictions, check out [this tool]
 
 #### 1. Collect data
 
-For this project, I construct a dataset of about 340,000 labeled tweets, denoting whether they were sent from a Russian troll account or not. The data on Russian troll tweets was combiled by Linvill and Warren of Clemson University, and open-sourced through [FiveThirtyEight](https://github.com/fivethirtyeight/russian-troll-tweets). In order to construct a control group, I employed the [`twint`](https://github.com/twintproject/twint) package to collect a sample of tweets from verified users, tweeting within the same time period as the Russian troll accounts. This collection can be replicated using this code:
+For this project, I construct a dataset of about 340,000 labeled tweets, denoting whether they were sent from a Russian troll account or not. The data on Russian troll tweets was compiled by Linvill and Warren of Clemson University, and open-sourced through [FiveThirtyEight](https://github.com/fivethirtyeight/russian-troll-tweets). In order to construct a control group, I employed the [`twint`](https://github.com/twintproject/twint) package to collect a sample of tweets from verified users, tweeting within the same time period as the Russian troll accounts. This collection can be replicated using this code:
 
 ```bash
 $ bash collect_verified_tweets.sh
