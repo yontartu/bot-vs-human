@@ -5,7 +5,7 @@ ipython==7.5.0
 ipython-genutils==0.2.0
 ipywidgets==7.4.2
 Jinja2==2.10.1
-joblib==0.13.2
+joblib==1.2.0
 jupyter==1.0.0
 jupyter-client==5.2.4
 jupyter-console==6.0.0
